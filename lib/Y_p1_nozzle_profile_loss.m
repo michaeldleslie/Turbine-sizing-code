@@ -1,6 +1,9 @@
 function Y_p1 = Y_p1_nozzle_profile_loss(alpha2, s_c_design)
 %Y_p1_nozzle_profile_loss Calculates nozzle profile loss Y_p1
 
+% Take absolute value of alpha2
+alpha2 = abs(alpha2);
+
 % Determine location of s_c_min 
 if alpha2 >= 30
     s_c_min = 0.46 + alpha2 ./ 77;

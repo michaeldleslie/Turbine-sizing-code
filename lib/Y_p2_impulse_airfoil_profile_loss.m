@@ -1,6 +1,9 @@
 function Y_p2 = Y_p2_impulse_airfoil_profile_loss(alpha2, s_c_design)
 %Y_p2_impulse_airfoil_profile_loss Calculates impulse airfoil profile loss Y_p2
 
+% Take absolute value of alpha2
+alpha2 = abs(alpha2);
+
 % Determine location of s_c_min
 s_c_min = 0.224 + 1.575 * (alpha2 / 90) - (alpha2 / 90)^2;
 
