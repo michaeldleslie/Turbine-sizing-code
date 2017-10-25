@@ -1,4 +1,7 @@
+%% Initialization
 clear variables;
+% Add lib to path
+addpath(genpath(pwd));
 
 %% Validate Y_p1
 clear variables;

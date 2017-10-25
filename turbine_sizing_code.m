@@ -1,5 +1,8 @@
-%% Clear All
-clear;
+%% Initialization
+clear variables;
+% Add lib to path
+addpath(genpath(pwd));
+
 %% Set Up Inital Guess Values & Global Variables
 eff_tt = 0.9;
 flow_coeff = 0.4;
