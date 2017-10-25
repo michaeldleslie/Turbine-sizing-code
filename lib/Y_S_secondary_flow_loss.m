@@ -11,7 +11,7 @@ Z = (C_L / s_c_opt)^2 * (sind(alpha2)^2 / sind(alpha_m)^3);
 % Use Z in absolute value
 Z = abs(Z);
 
-% Calcualte cascade aspect correction F_AR
+% Calculate cascade aspect correction F_AR
 if L_c_ratio > 2
     F_AR = L_c_ratio.^-1;
 else
