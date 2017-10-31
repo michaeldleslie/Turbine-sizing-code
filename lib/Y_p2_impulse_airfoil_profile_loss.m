@@ -5,14 +5,14 @@ function Y_p2 = Y_p2_impulse_airfoil_profile_loss(alpha2, s_c_design)
 alpha2 = abs(alpha2);
 
 % Determine location of s_c_min
-s_c_min = 0.224 + 1.575 * (alpha2 / 90) - (alpha2 / 90)^2;
+    s_c_min = 0.224 + 1.575 * (alpha2 / 90) - (alpha2 / 90)^2; 
 
 % Calculate difference between actual and design s_c_min
 X = s_c_design - s_c_min;
 
 % Calculate algebraic coefficients
 A = 0.242 - alpha2 / 151 + (alpha2/127)^2;
-if alpha2 >= 30
+if alpha2 <= 30
     B = 0.3 + (30 - alpha2) / 50;
 else
     B = 0.3 + (30 - alpha2) / 275;

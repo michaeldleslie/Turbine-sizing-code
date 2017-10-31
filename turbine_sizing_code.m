@@ -1,4 +1,5 @@
 %% Initialization
+clc
 clear variables;
 % Add lib to path
 addpath(genpath(pwd));
@@ -8,19 +9,19 @@ eff_tt = 0.9;
 flow_coeff = 0.4;
 stage_loading = 1.6;
 Rc = 0;
-t01 = 753;
-p01 = 182385;
-p3 = 101325;
-cp = 1156.9;
-gamma = 1.33;
+t01 = 500;
+p01 = 13842074;
+p3 = 11011992;
+cp = 15636.11;
+gamma = 1.3994;
 z = 1.00;
-mass_flow = 9;
-power = 1200*745.7; %Units in Watts
-speed = 8000;
-r_gas = 286.9;
+mass_flow = 13.61;
+power = 6215*745.7; %Units in Watts
+speed = 50000;
+r_gas = 4123.31;
 %% Variables Defined Later in the Notes
-nb_stator = 24;
-nb_rotor = 40;
+nb_stator = 80;
+nb_rotor = 100;
 %% Power Check
 uc0_ratio_guess = sqrt(1/(flow_coeff^2 - (Rc-1)*(4/eff_tt)));
 power_check = 0;
@@ -131,3 +132,34 @@ axial_chordRot = sRot/s_bzRot;
 stagger_angleRot = asind(axial_chordRot/chordRot);
 %% Equation 63 ?
 omega = r_mean*c2u;
+%% Print Values
+fprintf('Sizing Values\n')
+fprintf('\na2 = %0.2f\n\n',a2)
+fprintf('a3 = %0.2f\n\n',a3)
+fprintf('alpha2 = %0.2f\n\n',alpha2)
+fprintf('alpha2_p = %0.2f\n\n',alpha2_p)
+fprintf('alpha3_p = %0.2f\n\n',alpha3_p)
+fprintf('c2 = %0.2f\n\n',c2)
+fprintf('c2a = %0.2f\n\n',c2a)
+fprintf('c2u = %0.2f\n\n',c2u)
+fprintf('c3 = %0.2f\n\n',c3)
+fprintf('c3a = %0.2f\n\n',c3a)
+fprintf('w2 = %0.2f\n\n',w2)
+fprintf('w2a = %0.2f\n\n',w2a)
+fprintf('w2u = %0.2f\n\n',w2u)
+fprintf('w3 = %0.2f\n\n',w3)
+fprintf('w3a = %0.2f\n\n',w3a)
+fprintf('w3u = %0.2f\n\n',w3u)
+fprintf('U = %0.2f\n\n',U)
+fprintf('p01 = %0.2f\n\n',p01)
+fprintf('p02 = %0.2f\n\n',p02)
+fprintf('p2 = %0.2f\n\n',p2)
+fprintf('p3 = %0.2f\n\n',p3)
+fprintf('p3_veri = %0.2f\n\n',p3_veri)
+fprintf('pw2 = %0.2f\n\n',pw2)
+fprintf('pw3 = %0.2f\n\n',pw3)
+fprintf('t01 = %0.2f\n\n',t01)
+fprintf('t2 = %0.2f\n\n',t2)
+fprintf('t3 = %0.2f\n\n',t3)
+fprintf('Power = %0.2f\n\n',power)
+fprintf('eff_tt = %0.2f\n\n',eff_tt)
