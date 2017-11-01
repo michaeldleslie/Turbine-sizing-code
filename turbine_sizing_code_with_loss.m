@@ -171,19 +171,25 @@ while (QQ)
     %% Store old efficiency
     % store initial efficiency guess into separate variable
     eff_tt_old = eff_tt;
-    QQ = false;
+    
     
     
     %% Perform Loss Calculations
-    
-    %Re_c = rho2 *
     % roughness = (100 * axial_chordRot) / Re_rot;
-    % % Rotor Losses
+    
     % Calculate M1
     t1 = t01 - (c0^2/(2*cp));
     a1 = sqrt(gamma*r_gas*t1);
     m1 = c0/a1;
+    % Typical values for roughness 5E-6, c/e 10,000-20,000
+    roughness = 5E-6;
+    % Absolute Pressure at nozzle inlet
+    p1 = p01 / (1 + ((gamma-1)/2) * m1^2)^(gamma/(gamma-1));
+    % Density at nozzle inlet
+    rho1 = p1/(z*r_gas*t1);
+    % Sutherland?s Law
     
+    % % Rotor Losses
     % K_p_R = K_p_compressibility_correction(mw2,mw3)
     % K_Re_R = K_Re_reynolds_correction(rho2,w2,axial_chordRot,dynamic_vis, roughness);
     % %Y_cl_R = Y_cl_clearance_loss(alpha2_p,alpha3_p,s_c_optRot,l3/axial
@@ -200,5 +206,6 @@ while (QQ)
     K_inc_Stator = 1;
     K_M_Stator = 1;
     K_P_Stator = K_p_compressibility_correction(m1,m2);
-    
+    K_Re_Stator = K_Re_reynolds_correction(rho1,c2,axial_chord,dynamic_vis, roughness);
+QQ = false;    
 end
