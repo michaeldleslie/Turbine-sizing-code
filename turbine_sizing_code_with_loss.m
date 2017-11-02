@@ -132,8 +132,8 @@ while (QQ)
     %% Sizing Calcs
     r_mean = (60 * U)/(2*pi*speed);
     %BL = 0.9; %Blockage Value
-    l2 = area2/(2*pi*r_mean*blockage);
-    l3 = area3/(2*pi*r_mean*blockage);
+    l_Stator = area2/(2*pi*r_mean*blockage);
+    l_Rotor = area3/(2*pi*r_mean*blockage);
     %% S/C Ratio Calc Stator
     s_c_opt = 0.427 + alpha2/58 - (alpha2/93)^2;
     
@@ -188,7 +188,7 @@ while (QQ)
     % Density at nozzle inlet
     rho1 = p1/(z*r_gas*t1);
     % Sutherland?s Law
-    
+    dynamic_visc = (5.16E-5)/rho2;
     % % Rotor Losses
     % K_p_R = K_p_compressibility_correction(mw2,mw3)
     % K_Re_R = K_Re_reynolds_correction(rho2,w2,axial_chordRot,dynamic_vis, roughness);
@@ -206,6 +206,9 @@ while (QQ)
     K_inc_Stator = 1;
     K_M_Stator = 1;
     K_P_Stator = K_p_compressibility_correction(m1,m2);
-    K_Re_Stator = K_Re_reynolds_correction(rho1,c2,axial_chord,dynamic_vis, roughness);
+    K_Re_Stator = K_Re_reynolds_correction(rho2,c2,axial_chord,dynamic_visc, roughness);
+    K_TE_Stator = 1;
+    Y_S_Stator = Y_S_secondary_flow_loss(90,alpha2,90,l_Stator/chord, s_c_opt);
+    Y_cl_Stator = 0;
 QQ = false;    
 end
