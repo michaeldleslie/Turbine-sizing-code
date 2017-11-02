@@ -189,18 +189,11 @@ while (QQ)
     rho1 = p1/(z*r_gas*t1);
     % Sutherland?s Law
     dynamic_visc = (5.16E-5)/rho2;
-    % % Rotor Losses
-    % K_p_R = K_p_compressibility_correction(mw2,mw3)
-    % K_Re_R = K_Re_reynolds_correction(rho2,w2,axial_chordRot,dynamic_vis, roughness);
-    % %Y_cl_R = Y_cl_clearance_loss(alpha2_p,alpha3_p,s_c_optRot,l3/axial
-    % %Y_p1 = Y_p1_nozzle_profile_loss(alpha2,s_c_opt); % 0 for rotors?
-    %
-    % Y_p2_R = Y_p2_impulse_airfoil_profile_loss
-    % Y_P_R = Y_P_profile_loss
-    % Y_S_R = Y_S_secondary_flow_loss
+    dynamic_viscosity_Rotor_outlet = (5.16E-5)/rho3;
+
     
     % Stator
-    Y_p1 = Y_p1_nozzle_profile_loss(alpha2,s_c_opt); % 0 for rotors?
+    Y_p1 = Y_p1_nozzle_profile_loss(alpha2,s_c_opt);
     Y_p2 = Y_p2_impulse_airfoil_profile_loss(alpha2,s_c_opt);
     K_mod_Stator = 1;
     K_inc_Stator = 1;
@@ -210,5 +203,20 @@ while (QQ)
     K_TE_Stator = 1;
     Y_S_Stator = Y_S_secondary_flow_loss(90,alpha2,90,l_Stator/chord, s_c_opt);
     Y_cl_Stator = 0;
+    Y_P_Stator = Y_P_profile_loss(90,alpha2,s_c_opt);
+    
+        % Rotor Losses
+    Y_p1_Rotor = Y_p1_nozzle_profile_loss(alpha3_p,s_c_optRot);
+    Y_p2_Rotor = Y_p2_impulse_airfoil_profile_loss(alpha3_p,s_c_optRot);
+    K_mod_Rotor = 1;
+    K_inc_Rotor = 1;
+    K_M_Rotor = 1;
+    K_P_Rotor = K_p_compressibility_correction(mw2,mw3);
+    K_Re_Rotor = K_Re_reynolds_correction(rho3,w3,axial_chordRot,dynamic_viscosity_Rotor_outlet, roughness);
+    K_TE_Rotor = 1;
+    Y_S_R = Y_S_secondary_flow_loss(alpha2_p,alpha3_p,alpha2_p,l_Rotor/chord,s_c_optRot);
+    Y_cl_Rotor = Y_cl_clearance_loss(alpha2_p,alpha3_p,s_c_optRot,l_Rotor/chord,0.00025/l_Rotor,0);
+    Y_P_Rotor = Y_P_profile_loss(alpha2_p,alpha3_p,s_c_optRot);
+    
 QQ = false;    
 end
