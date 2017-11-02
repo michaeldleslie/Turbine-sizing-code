@@ -20,7 +20,7 @@ z = 1.00;
 mass_flow = 13.61;
 power_required = 6215*745.7; %Units in Watts
 speed = 50000;
-r_gas = 4123.311;
+r_gas = 4123.31;
 nb_stator = 90;
 nb_rotor = 100;
 Kloss_N = 0.98;
@@ -101,18 +101,26 @@ end
 
 
 %% Initial guess of inlet and outlet pressures
-
-% Total pressure guess from station 1 to 2
-p02 = Kloss_N*p01;
-% Convert to static absolute
-p2 = p02 / (1 + ((gamma-1)/2) * m2^2)^(gamma/(gamma-1));
-% Convert to static relative
-pw2 = p2 * (1 + ((gamma-1)/2) * mw2^2)^(gamma/(gamma-1));
-% Relative pressure from station 2 to 3
-pw3 = Kloss_R * pw2;
-% Verification pressure
-p3_veri = pw3 / (1 + ((gamma-1)/2) * mw3^2)^(gamma/(gamma-1));
+% Use a guess of 2% losses across stator and rotor
+lossPercentage = 0.05;
+count = 0;
+p3_veri = 0;
+while p3_veri < p3
+    % Iterate loss percentage
+    %lossPercentage = lossPercentage - 0.0001;
     
+    count = count+1;
+    % Total pressure guess from station 1 to 2
+    p02 = (1 - lossPercentage)*p01;
+    % Convert to static absolute
+    p2 = p02 / (1 + ((gamma-1)/2) * m2^2)^(gamma/(gamma-1));
+    % Convert to static relative
+    pw2 = p2 * (1 + ((gamma-1)/2) * mw2^2)^(gamma/(gamma-1));
+    % Relative pressure from station 2 to 3
+    pw3 = (1 - lossPercentage) * pw2;
+    % Verification pressure
+    p3_veri = pw3 / (1 + ((gamma-1)/2) * mw3^2)^(gamma/(gamma-1));
+end
 
 
 %% Density Calc at Rotor Inlet
@@ -130,9 +138,9 @@ area3 = mass_flow/(rho3*c3a);
 
 %% Sizing Calcs
 r_mean = (60 * U)/(2*pi*speed);
-%BL = 0.9; %Blockage Value
-l2 = area2/(2*pi*r_mean*blockage);
-l3 = area3/(2*pi*r_mean*blockage);
+BL = 0.9; %Blockage Value
+l2 = area2/(2*pi*r_mean*BL);
+l2 = area3/(2*pi*r_mean*BL);
 %% S/C Ratio Calc Stator
 s_c_opt = 0.427 + alpha2/58 - (alpha2/93)^2;
 
@@ -172,3 +180,34 @@ stagger_angleRot = asind(axial_chordRot/chordRot);
 omega = r_mean*c2u;
 
 
+% %% Print Values
+% fprintf('Sizing Values\n')
+% fprintf('\na2 = %0.2f\n\n',a2)
+% fprintf('a3 = %0.2f\n\n',a3)
+% fprintf('alpha2 = %0.2f\n\n',alpha2)
+% fprintf('alpha2_p = %0.2f\n\n',alpha2_p)
+% fprintf('alpha3_p = %0.2f\n\n',alpha3_p)
+% fprintf('c2 = %0.2f\n\n',c2)
+% fprintf('c2a = %0.2f\n\n',c2a)
+% fprintf('c2u = %0.2f\n\n',c2u)
+% fprintf('c3 = %0.2f\n\n',c3)
+% fprintf('c3a = %0.2f\n\n',c3a)
+% fprintf('w2 = %0.2f\n\n',w2)
+% fprintf('w2a = %0.2f\n\n',w2a)
+% fprintf('w2u = %0.2f\n\n',w2u)
+% fprintf('w3 = %0.2f\n\n',w3)
+% fprintf('w3a = %0.2f\n\n',w3a)
+% fprintf('w3u = %0.2f\n\n',w3u)
+% fprintf('U = %0.2f\n\n',U)
+% fprintf('p01 = %0.2f\n\n',p01)
+% fprintf('p02 = %0.2f\n\n',p02)
+% fprintf('p2 = %0.2f\n\n',p2)
+% fprintf('p3 = %0.2f\n\n',p3)
+% fprintf('p3_veri = %0.2f\n\n',p3_veri)
+% fprintf('pw2 = %0.2f\n\n',pw2)
+% fprintf('pw3 = %0.2f\n\n',pw3)
+% fprintf('t01 = %0.2f\n\n',t01)
+% fprintf('t2 = %0.2f\n\n',t2)
+% fprintf('t3 = %0.2f\n\n',t3)
+% fprintf('Power = %0.2f\n\n',power)
+% fprintf('eff_tt = %0.2f\n\n',eff_tt)
