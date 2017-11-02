@@ -1,7 +1,7 @@
-function K_Re = K_Re_reynolds_correction(rho, outlet_velocity, chord, dynamic_viscosity, roughness)
+function K_Re = K_Re_reynolds_correction(rho_outlet, velocity_outlet, chord, dynamic_viscosity_outlet, roughness)
 %reynolds_correction Calculates Reynolds correction
 
-Re_c = rho * outlet_velocity * chord / dynamic_viscosity;
+Re_c = rho_outlet * velocity_outlet * chord / dynamic_viscosity_outlet;
 
 Re_r = 100 * chord / roughness;
 
