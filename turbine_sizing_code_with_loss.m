@@ -218,10 +218,6 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     Kloss_N = p02_iteration / p01;
     Kloss_R = pw3_iteration / pw2;
     
-    
-%     c2_iteration = c2 * (p3_iteration/p3)^2;
-%     ca_iteration = c2_iteration * sind(alpha2);
-    
     count2 = 0;
     %% Start inner loop
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -229,29 +225,12 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         c2_iteration = c2 * (p3_iteration/p3)^2;
         % Equation 11
         ca_iteration = c2_iteration * sind(alpha2);
-        %% Check if required power is achieved     
-        % Velocity ratio guess (Equation (9))
-        uc0_ratio = sqrt(1/(flow_coeff^2 - (Rc-1)*(4/eff_tt)));
-        % Find isentropic discharge temperature
-        t3is = t01 * (p3/p01)^((gamma-1)/gamma);
-        % Find spouting velocity
-        c0 = sqrt(2*cp*(t01-t3is));
-        U = c0 * uc0_ratio;
         ca = ca_iteration;
-        delta_his = (c0^2/2) - (ca^2/2);
-        work_int = delta_his * eff_tt;
-        power = work_int * mass_flow;
-        
-%         if (power < power_required)
-%             fprintf('Power requirements not met.\n');
-%             return;
-%         end
-        
         %% Calculate velocity triangles and alpha2 for station 2 and 3
         % Calculates velocity triangles and alpha2
         
         % Inlet
-        alpha2 = atand((U*ca)/work_int);
+        %alpha2 = atand((U*ca)/work_int);
         c2 = c2_iteration;
         % Equation 19
         c2u = ca * cotd(alpha2);
@@ -370,11 +349,6 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         % Equation 62
         stagger_angleRot = asind(axial_chordRot/chordRot);
         
-        %% Store old efficiency (Not needed in inner loop?)
-        % store initial efficiency guess into separate variable
-        %eff_tt_old = eff_tt;
-        
-        
         %% Perform loss calculations
       
         % Find necessary quantities
@@ -416,8 +390,6 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         Kloss_N = p02_iteration / p01;
         Kloss_R = pw3_iteration / pw2;
                 
-%         c2_iteration = c2 * (p3_iteration/p3)^2;
-%         ca_iteration = c2_iteration * sind(alpha2); 
         count2 = count2 + 1;
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -426,7 +398,8 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     % Equation 12
     eff_tt = (1 - (t03/t01)) / 1 - (p03_iteration/p01)^((gamma-1)/gamma);
     
-    
+
+end
     %% Free Vortex
     % All calculations for rotor
     
@@ -445,4 +418,3 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     alpha3_p_hub = 90 - atand(w3u_hub/c3a);
     alpha3_p_tip = 90 - atand(w3u_tip/c3a);
     count1 = count1 + 1;
-end
