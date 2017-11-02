@@ -202,9 +202,9 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     Y_stator = Y_P_stator + Y_S_stator + Y_cl_stator;
     
     % Rotor Losses
-    Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_stator, s_c_optRot);
-    Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_optRot, l_Rotor/chord_stator, 0.00025/l_Rotor, 0);
-    Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt, mw2, mw3, rho3, w3, chord_stator, tw3, t_max);
+    Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_rotor, s_c_optRot);
+    Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_optRot, l_Rotor/chord_rotor, 0.00025/l_Rotor, 0);
+    Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt, mw2, mw3, rho3, w3, chord_rotor, tw3, t_max);
     Y_rotor = Y_P_rotor + Y_S_rotor + Y_cl_rotor;
     
     
@@ -377,9 +377,9 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         Y_stator = Y_P_stator + Y_S_stator + Y_cl_stator;
         
         % Rotor Losses
-        Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_stator, s_c_optRot);
-        Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_optRot, l_Rotor/chord_stator, 0.00025/l_Rotor, 0);
-        Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt, mw2, mw3, rho3, w3, chord_stator, tw3, t_max);
+        Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_rotor, s_c_optRot);
+        Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_optRot, l_Rotor/chord_rotor, 0.00025/l_Rotor, 0);
+        Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt, mw2, mw3, rho3, w3, chord_rotor, tw3, t_max);
         Y_rotor = Y_P_rotor + Y_S_rotor + Y_cl_rotor;
         
         
