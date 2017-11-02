@@ -24,13 +24,12 @@ r_gas = 4123.311;
 nb_stator = 90;
 nb_rotor = 100;
 Kloss_N = 0.98;
-Kloss_R = 0.9604;
+Kloss_R = 0.98;
 blockage = 0.9;
 eff_tt_old = 0;
 count1 = 0;
 while (abs(eff_tt - eff_tt_old) > 0.001)
     %% Check if required power is achieved
-    
     
     % Velocity ratio guess (Equation (9))
     uc0_ratio = sqrt(1/(flow_coeff^2 - (Rc-1)*(4/eff_tt)));
@@ -106,12 +105,14 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     %% Initial guess of inlet and outlet pressures
     
     % Total pressure guess from station 1 to 2
+    % Equation 42
     p02 = Kloss_N*p01;
     % Convert to static absolute
     p2 = p02 / (1 + ((gamma-1)/2) * m2^2)^(gamma/(gamma-1));
     % Convert to static relative
     pw2 = p2 * (1 + ((gamma-1)/2) * mw2^2)^(gamma/(gamma-1));
     % Relative pressure from station 2 to 3
+    % Equation 45
     pw3 = Kloss_R * pw2;
     % Verification pressure
     p3_verification = pw3 / (1 + ((gamma-1)/2) * mw3^2)^(gamma/(gamma-1));
@@ -167,6 +168,7 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     
     
     %% Stagger angle rotor
+    % Equation 62
     stagger_angleRot = asind(axial_chordRot/chordRot);
     
     %% Store old efficiency
@@ -225,6 +227,7 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     while abs(p3 - p3_verification) > 100
         c2_iteration = c2 * (p3_iteration/p3)^2;
+        % Equation 11
         ca_iteration = c2_iteration * sind(alpha2);
         %% Check if required power is achieved     
         % Velocity ratio guess (Equation (9))
@@ -239,10 +242,10 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         work_int = delta_his * eff_tt;
         power = work_int * mass_flow;
         
-        if (power < power_required)
-            fprintf('Power requirements not met.\n');
-            return;
-        end
+%         if (power < power_required)
+%             fprintf('Power requirements not met.\n');
+%             return;
+%         end
         
         %% Calculate velocity triangles and alpha2 for station 2 and 3
         % Calculates velocity triangles and alpha2
@@ -250,6 +253,7 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         % Inlet
         alpha2 = atand((U*ca)/work_int);
         c2 = c2_iteration;
+        % Equation 19
         c2u = ca * cotd(alpha2);
         w2u = c2u - U;
         w2a = ca;
@@ -301,12 +305,14 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         %% Initial guess of inlet and outlet pressures
         
         % Total pressure guess from station 1 to 2
+        % Equation 42
         p02 = Kloss_N*p01;
         % Convert to static absolute
         p2 = p02 / (1 + ((gamma-1)/2) * m2^2)^(gamma/(gamma-1));
         % Convert to static relative
         pw2 = p2 * (1 + ((gamma-1)/2) * mw2^2)^(gamma/(gamma-1));
         % Relative pressure from station 2 to 3
+        % Equation 45
         pw3 = Kloss_R * pw2;
         % Verification pressure
         p3_verification = pw3 / (1 + ((gamma-1)/2) * mw3^2)^(gamma/(gamma-1));
@@ -361,11 +367,12 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         
         
         %% Stagger angle rotor
+        % Equation 62
         stagger_angleRot = asind(axial_chordRot/chordRot);
         
-        %% Store old efficiency
+        %% Store old efficiency (Not needed in inner loop?)
         % store initial efficiency guess into separate variable
-        eff_tt_old = eff_tt;
+        %eff_tt_old = eff_tt;
         
         
         %% Perform loss calculations
@@ -416,7 +423,8 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Recalculate efficiency
     t03 = t3*(1+((gamma-1)/2)*m3^2);
-    eff_tt = (1 - t03/t01) / 1 - (p03_iteration/p01)^((gamma-1)/gamma);
+    % Equation 12
+    eff_tt = (1 - (t03/t01)) / 1 - (p03_iteration/p01)^((gamma-1)/gamma);
     
     
     %% Free Vortex
