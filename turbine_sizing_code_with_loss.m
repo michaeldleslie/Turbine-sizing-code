@@ -27,7 +27,7 @@ Kloss_N = 0.98;
 Kloss_R = 0.9604;
 blockage = 0.9;
 eff_tt_old = 0;
-
+count1 = 0;
 while (abs(eff_tt - eff_tt_old) > 0.001)
     %% Check if required power is achieved
     
@@ -148,7 +148,7 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     chord = s/s_c_opt;
     axial_chord = s/s_bz;
     % Ask about t_max
-    t_max = 0.02*chord;
+    t_max = 0.1*chord;
     
     %% Stagger angle stator
     stagger_angle = asind(axial_chord/chord);
@@ -217,12 +217,15 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     Kloss_R = pw3_iteration / pw2;
     
     
-    c2_iteration = c2 * (p3_iteration/p3)^2;
-    ca_iteration = c2_iteration * sind(alpha2);
+%     c2_iteration = c2 * (p3_iteration/p3)^2;
+%     ca_iteration = c2_iteration * sind(alpha2);
     
-    count = 0;
+    count2 = 0;
     %% Start inner loop
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     while abs(p3 - p3_verification) > 100
+        c2_iteration = c2 * (p3_iteration/p3)^2;
+        ca_iteration = c2_iteration * sind(alpha2);
         %% Check if required power is achieved     
         % Velocity ratio guess (Equation (9))
         uc0_ratio = sqrt(1/(flow_coeff^2 - (Rc-1)*(4/eff_tt)));
@@ -406,11 +409,11 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         Kloss_N = p02_iteration / p01;
         Kloss_R = pw3_iteration / pw2;
                 
-        c2_iteration = c2 * (p3_iteration/p3)^2;
-        ca_iteration = c2_iteration * sind(alpha2); 
-        count = count + 1;
+%         c2_iteration = c2 * (p3_iteration/p3)^2;
+%         ca_iteration = c2_iteration * sind(alpha2); 
+        count2 = count2 + 1;
     end
-    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Recalculate efficiency
     t03 = t3*(1+((gamma-1)/2)*m3^2);
     eff_tt = (1 - t03/t01) / 1 - (p03_iteration/p01)^((gamma-1)/gamma);
@@ -433,4 +436,5 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     alpha2_p_tip = 90 - atand(w2u_tip/c3a);
     alpha3_p_hub = 90 - atand(w3u_hub/c3a);
     alpha3_p_tip = 90 - atand(w3u_tip/c3a);
+    count1 = count1 + 1;
 end
