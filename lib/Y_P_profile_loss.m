@@ -7,7 +7,6 @@ function Y_P = Y_P_profile_loss(alpha_inlet, alpha_outlet, s_c_design, ...
 alpha_inlet = abs(alpha_inlet);
 alpha_outlet = abs(alpha_outlet);
 
-
 %% Adjustment factors
 % K_mod is refinement coefficient, K_mod = to one for both stator and rotor
 K_mod = 1;
