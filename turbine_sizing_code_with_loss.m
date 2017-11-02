@@ -145,14 +145,17 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     
     
     %% Pitch Calculation and Chord/Axial Chord
-    s = (2*pi*r_mean)/(24);
-    chord = s/s_c_opt;
-    axial_chord = s/s_bz;
+    s_stator = (2*pi*r_mean)/(nb_stator);
+    chord_stator = s_stator/s_c_opt;
+    axial_chord_stator = s_stator/s_bz;
+    s_rotor = (2*pi*r_mean)/(nb_rotor);
+    chord_rotor = s_stator/s_c_opt;
+    axial_chord_rotor = s_stator/s_bz;
     % Ask about t_max
-    t_max = 0.1*chord;
+    t_max = 0.1*chord_stator;
     
     %% Stagger angle stator
-    stagger_angle = asind(axial_chord/chord);
+    stagger_angle = asind(axial_chord_stator/chord_stator);
     
     
     %% S/C ratio calc rotor
@@ -193,15 +196,15 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     rho1 = p1/(z*r_gas*t1);
     
     % Stator
-    Y_P_stator = Y_P_profile_loss(alpha1, alpha2, s_c_opt, m1, m2, rho2, c2, chord, t2, t_max);
-    Y_S_stator = Y_S_secondary_flow_loss(90, alpha2, 90, l_Stator/chord, s_c_opt);
+    Y_P_stator = Y_P_profile_loss(alpha1, alpha2, s_c_opt, m1, m2, rho2, c2, chord_stator, t2, t_max);
+    Y_S_stator = Y_S_secondary_flow_loss(90, alpha2, 90, l_Stator/chord_stator, s_c_opt);
     Y_cl_stator = 0;
     Y_stator = Y_P_stator + Y_S_stator + Y_cl_stator;
     
     % Rotor Losses
-    Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord, s_c_optRot);
-    Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_optRot, l_Rotor/chord, 0.00025/l_Rotor, 0);
-    Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt, mw2, mw3, rho3, w3, chord, tw3, t_max);
+    Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_stator, s_c_optRot);
+    Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_optRot, l_Rotor/chord_stator, 0.00025/l_Rotor, 0);
+    Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt, mw2, mw3, rho3, w3, chord_stator, tw3, t_max);
     Y_rotor = Y_P_rotor + Y_S_rotor + Y_cl_rotor;
     
     
@@ -324,13 +327,16 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         
         
         %% Pitch Calculation and Chord/Axial Chord
-        s = (2*pi*r_mean)/(24);
-        chord = s/s_c_opt;
-        axial_chord = s/s_bz;
+        s_stator = (2*pi*r_mean)/(nb_stator);
+        chord_stator = s_stator/s_c_opt;
+        axial_chord_stator = s_stator/s_bz;
+        s_rotor = (2*pi*r_mean)/(nb_rotor);
+        chord_rotor = s_stator/s_c_opt;
+        axial_chord_rotor = s_stator/s_bz;
         
         
         %% Stagger angle stator
-        stagger_angle = asind(axial_chord/chord);
+        stagger_angle = asind(axial_chord_stator/chord_stator);
         
         
         %% S/C ratio calc rotor
@@ -365,15 +371,15 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         rho1 = p1/(z*r_gas*t1);
         
         % Stator
-        Y_P_stator = Y_P_profile_loss(alpha1, alpha2, s_c_opt, m1, m2, rho2, c2, chord, t2, t_max);
-        Y_S_stator = Y_S_secondary_flow_loss(90, alpha2, 90, l_Stator/chord, s_c_opt);
+        Y_P_stator = Y_P_profile_loss(alpha1, alpha2, s_c_opt, m1, m2, rho2, c2, chord_stator, t2, t_max);
+        Y_S_stator = Y_S_secondary_flow_loss(90, alpha2, 90, l_Stator/chord_stator, s_c_opt);
         Y_cl_stator = 0;
         Y_stator = Y_P_stator + Y_S_stator + Y_cl_stator;
         
         % Rotor Losses
-        Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord, s_c_optRot);
-        Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_optRot, l_Rotor/chord, 0.00025/l_Rotor, 0);
-        Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt, mw2, mw3, rho3, w3, chord, tw3, t_max);
+        Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_stator, s_c_optRot);
+        Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_optRot, l_Rotor/chord_stator, 0.00025/l_Rotor, 0);
+        Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt, mw2, mw3, rho3, w3, chord_stator, tw3, t_max);
         Y_rotor = Y_P_rotor + Y_S_rotor + Y_cl_rotor;
         
         
