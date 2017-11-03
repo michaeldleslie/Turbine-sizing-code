@@ -18,7 +18,7 @@ Z = (C_L/s_c_ratio)^2 * (sind(alpha_outlet)^2/sind(alpha_m)^3);
 Z = abs(Z);
 
 %   Calculate Y_cl
-Y_cl = F_B * Z * L_c_ratio^-1 * tip_clrnc_L_ratio^0.78;
+Y_cl = F_B * Z * L_c_ratio^-1 * (tip_clrnc_L_ratio * L_c_ratio)^0.78;
 
 end
 

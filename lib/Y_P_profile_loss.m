@@ -46,8 +46,7 @@ interpolation_coefficient = (90 - alpha_inlet) / (90 - alpha_outlet);
 Y_p_initial = (Y_p1 + interpolation_coefficient^2 * (Y_p2 - Y_p1));
 
 %% Find final Y_P value
-Y_P = K_mod * K_inc * K_M * K_p * K_Re * K_TE * ...
-    Y_p_initial * (t_max/(0.02*chord))^interpolation_coefficient;
+Y_P = K_mod * K_inc * K_M * K_p * K_Re * K_TE * Y_p_initial;
 
 
 end

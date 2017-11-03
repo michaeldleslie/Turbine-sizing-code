@@ -187,7 +187,7 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     
     % Rotor Losses
     Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_rotor, s_c_opt_Rotor);
-    Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_opt_Rotor, l_Rotor/chord_rotor, 0.00025/l_Rotor, 0);
+    Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_opt_Rotor, l_Rotor/chord_rotor, 0.02, 1);
     Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt_Rotor, mw2, mw3, rho3, w3, chord_rotor, tw3, t_max_rotor);
     Y_rotor = Y_P_rotor + Y_S_rotor + Y_cl_rotor;
     
@@ -326,10 +326,6 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         t_max_rotor = 0.1*chord_rotor;
         stagger_angleRot = asind(axial_chord_Rotor/chord_rotor);
         
-        %% Store old efficiency
-        % store initial efficiency guess into separate variable
-        eff_tt_old = eff_tt;
-        
         
         %% Perform loss calculations
         
@@ -353,7 +349,7 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         
         % Rotor Losses
         Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_rotor, s_c_opt_Rotor);
-        Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_opt_Rotor, l_Rotor/chord_rotor, 0.00025/l_Rotor, 0);
+        Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_opt_Rotor, l_Rotor/chord_rotor, 0.00025/l_Rotor, 1);
         Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt_Rotor, mw2, mw3, rho3, w3, chord_rotor, tw3, t_max_rotor);
         Y_rotor = Y_P_rotor + Y_S_rotor + Y_cl_rotor;
         
@@ -377,7 +373,7 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     %% Recalculate efficiency
     t03 = t3*(1+((gamma-1)/2)*m3^2);
     % Equation 12
-    eff_tt = (1 - (t03/t01)) / 1 - (p03_iteration/p01)^((gamma-1)/gamma);
+    eff_tt = (1 - (t03/t01)) / (1 - (p03_iteration/p01)^((gamma-1)/gamma));
     
     
 end
@@ -399,3 +395,5 @@ alpha2_p_tip = 90 - atand(w2u_tip/c3a);
 alpha3_p_hub = 90 - atand(w3u_hub/c3a);
 alpha3_p_tip = 90 - atand(w3u_tip/c3a);
 count1 = count1 + 1;
+
+fprintf('Code complete.');
