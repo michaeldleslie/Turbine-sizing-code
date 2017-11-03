@@ -1,6 +1,6 @@
 %% Initialization
 clc
-clear variables;
+clear all;
 % Add lib to path
 addpath(genpath(pwd));
 
@@ -24,10 +24,11 @@ r_gas = 4123.311;
 nb_stator = 90;
 nb_rotor = 100;
 Kloss_N = 0.98;
-Kloss_R = 0.98;
+Kloss_R = 0.9604;
 blockage = 0.9;
 eff_tt_old = 0;
 count1 = 0;
+m1 = 0.05;
 while (abs(eff_tt - eff_tt_old) > 0.001)
     %% Check if required power is achieved
     
@@ -135,44 +136,29 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     l_Rotor = area3/(2*pi*r_mean*blockage);
     
     
-    %% S/C ratio calc stator
-    s_c_opt = 0.427 + alpha2/58 - (alpha2/93)^2;
-    
-    
-    %% s/bz calculation
+    %% Stator geometry calculations
+    s_c_opt_Stator = 0.427 + alpha2/58 - (alpha2/93)^2;
     zweif = 0.8;
-    s_bz = zweif/(2 * sind(alpha2)^2 * (cotd(alpha2) - cotd(-87.129)));
-    
-    
-    %% Pitch Calculation and Chord/Axial Chord
+    s_bz_Stator = zweif/(2 * sind(alpha2)^2 * (cotd(alpha2) - cotd(alpha1)));
     s_stator = (2*pi*r_mean)/(nb_stator);
-    chord_stator = s_stator/s_c_opt;
-    axial_chord_stator = s_stator/s_bz;
-    s_rotor = (2*pi*r_mean)/(nb_rotor);
-    chord_rotor = s_stator/s_c_opt;
-    axial_chord_rotor = s_stator/s_bz;
-    % Ask about t_max
-    t_max = 0.1*chord_stator;
-    
-    %% Stagger angle stator
-    stagger_angle = asind(axial_chord_stator/chord_stator);
+    chord_stator = s_stator/s_c_opt_Stator;
+    axial_chord_stator = s_stator/s_bz_Stator;
+    t_max_stator = 0.1*chord_stator;
+    stagger_angle_stator = asind(axial_chord_stator/chord_stator);
     
     
-    %% S/C ratio calc rotor
-    s_c_optRot = 0.427 + alpha2/58 - (alpha2/93)^2;
-    s_c_impRot = 0.224 + (1.575 - abs(alpha3_p)/90) * (abs(alpha3_p)/90);
-    interpol_param = (90-abs(alpha2_p))/(90-abs(alpha3_p));%seemed a bit high
-    s_c_optActRot = s_c_optRot + (s_c_impRot - s_c_optRot)*...
-        (interpol_param*interpol_param);%make sure to keep sign
-    s_bzRot = zweif/(2 * sind(alpha3_p)^2 * (cotd(alpha2_p) - cotd(alpha3_p)));
-    sRot = (2*pi*r_mean)/nb_rotor;
-    chordRot = sRot/s_c_optActRot;
-    axial_chordRot = sRot/s_bzRot;
-    
-    
-    %% Stagger angle rotor
-    % Equation 62
-    stagger_angleRot = asind(axial_chordRot/chordRot);
+    %% Rotor geometry calculations
+    s_Rotor = (2*pi*r_mean)/(nb_rotor);
+    s_c_0_Rotor = 0.427 + abs(alpha3_p)/58 - (abs(alpha3_p)/93)^2;
+    s_c_1_Rotor = 0.224 + (1.575 - abs(alpha3_p)/90) * (abs(alpha3_p)/90);
+    interpol_param = (90-abs(alpha2_p))/(90-abs(alpha3_p));
+    s_c_opt_Rotor = s_c_0_Rotor + (s_c_1_Rotor - s_c_0_Rotor)*...
+        (abs(interpol_param)*interpol_param);%make sure to keep sign
+    s_bz_Rotor = zweif/(2 * sind(alpha3_p)^2 * (cotd(alpha2_p) - cotd(alpha3_p)));
+    chord_rotor = s_Rotor/s_c_opt_Rotor;
+    axial_chord_Rotor = s_Rotor/s_bz_Rotor;
+    t_max_rotor = 0.1*chord_rotor;
+    stagger_angleRot = asind(axial_chord_Rotor/chord_rotor);
     
     %% Store old efficiency
     % store initial efficiency guess into separate variable
@@ -184,9 +170,7 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     
     % Find necessary quantities
     % Calculate M1
-    t1 = t01 - (c0^2/(2*cp));
-    a1 = sqrt(gamma*r_gas*t1);
-    m1 = c0/a1;
+    t1 = t01 - (ca^2/(2*cp));
     
     a3 = sqrt(gamma*r_gas*t3);
     m3 = c3 / a3;
@@ -196,15 +180,15 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     rho1 = p1/(z*r_gas*t1);
     
     % Stator
-    Y_P_stator = Y_P_profile_loss(alpha1, alpha2, s_c_opt, m1, m2, rho2, c2, chord_stator, t2, t_max);
-    Y_S_stator = Y_S_secondary_flow_loss(90, alpha2, 90, l_Stator/chord_stator, s_c_opt);
+    Y_P_stator = Y_P_profile_loss(alpha1, alpha2, s_c_opt_Stator, m1, m2, rho2, c2, chord_stator, t2, t_max_stator);
+    Y_S_stator = Y_S_secondary_flow_loss(90, alpha2, alpha1, l_Stator/chord_stator, s_c_opt_Stator);
     Y_cl_stator = 0;
     Y_stator = Y_P_stator + Y_S_stator + Y_cl_stator;
     
     % Rotor Losses
-    Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_rotor, s_c_optRot);
-    Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_optRot, l_Rotor/chord_rotor, 0.00025/l_Rotor, 0);
-    Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt, mw2, mw3, rho3, w3, chord_rotor, tw3, t_max);
+    Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_rotor, s_c_opt_Rotor);
+    Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_opt_Rotor, l_Rotor/chord_rotor, 0.00025/l_Rotor, 0);
+    Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt_Rotor, mw2, mw3, rho3, w3, chord_rotor, tw3, t_max_rotor);
     Y_rotor = Y_P_rotor + Y_S_rotor + Y_cl_rotor;
     
     
@@ -229,13 +213,14 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         % Equation 11
         ca_iteration = c2_iteration * sind(alpha2);
         ca = ca_iteration;
+        
+        
         %% Calculate velocity triangles and alpha2 for station 2 and 3
         % Calculates velocity triangles and alpha2
         
         % Inlet
-        %alpha2 = atand((U*ca)/work_int);
-        c2 = c2_iteration;
-        % Equation 19
+        % Do not recalculate alpha2 on each inner loop iteration
+        c2 = ca / sind(alpha2);
         c2u = ca * cotd(alpha2);
         w2u = c2u - U;
         w2a = ca;
@@ -317,51 +302,41 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         l_Rotor = area3/(2*pi*r_mean*blockage);
         
         
-        %% S/C ratio calc stator
-        s_c_opt = 0.427 + alpha2/58 - (alpha2/93)^2;
-        
-        
-        %% s/bz calculation
+        %% Stator geometry calculations
+        s_c_opt_Stator = 0.427 + alpha2/58 - (alpha2/93)^2;
         zweif = 0.8;
-        s_bz = zweif/(2 * sind(alpha2)^2 * (cotd(alpha2) - cotd(-87.129)));
-        
-        
-        %% Pitch Calculation and Chord/Axial Chord
+        s_bz_Stator = zweif/(2 * sind(alpha2)^2 * (cotd(alpha2) - cotd(alpha1)));
         s_stator = (2*pi*r_mean)/(nb_stator);
-        chord_stator = s_stator/s_c_opt;
-        axial_chord_stator = s_stator/s_bz;
-        s_rotor = (2*pi*r_mean)/(nb_rotor);
-        chord_rotor = s_stator/s_c_opt;
-        axial_chord_rotor = s_stator/s_bz;
+        chord_stator = s_stator/s_c_opt_Stator;
+        axial_chord_stator = s_stator/s_bz_Stator;
+        t_max_stator = 0.1*chord_stator;
+        stagger_angle_stator = asind(axial_chord_stator/chord_stator);
         
         
-        %% Stagger angle stator
-        stagger_angle = asind(axial_chord_stator/chord_stator);
+        %% Rotor geometry calculations
+        s_Rotor = (2*pi*r_mean)/(nb_rotor);
+        s_c_0_Rotor = 0.427 + abs(alpha3_p)/58 - (abs(alpha3_p)/93)^2;
+        s_c_1_Rotor = 0.224 + (1.575 - abs(alpha3_p)/90) * (abs(alpha3_p)/90);
+        interpol_param = (90-abs(alpha2_p))/(90-abs(alpha3_p));
+        s_c_opt_Rotor = s_c_0_Rotor + (s_c_1_Rotor - s_c_0_Rotor)*...
+            (abs(interpol_param)*interpol_param);%make sure to keep sign
+        s_bz_Rotor = zweif/(2 * sind(alpha3_p)^2 * (cotd(alpha2_p) - cotd(alpha3_p)));
+        chord_rotor = s_Rotor/s_c_opt_Rotor;
+        axial_chord_Rotor = s_Rotor/s_bz_Rotor;
+        t_max_rotor = 0.1*chord_rotor;
+        stagger_angleRot = asind(axial_chord_Rotor/chord_rotor);
         
+        %% Store old efficiency
+        % store initial efficiency guess into separate variable
+        eff_tt_old = eff_tt;
         
-        %% S/C ratio calc rotor
-        s_c_optRot = 0.427 + alpha2/58 - (alpha2/93)^2;
-        s_c_impRot = 0.224 + (1.575 - abs(alpha3_p)/90) * (abs(alpha3_p)/90);
-        interpol_param = (90-abs(alpha2_p))/(90-abs(alpha3_p));%seemed a bit high
-        s_c_optActRot = s_c_optRot + (s_c_impRot - s_c_optRot)*...
-            (interpol_param*interpol_param);%make sure to keep sign
-        s_bzRot = zweif/(2 * sind(alpha3_p)^2 * (cotd(alpha2_p) - cotd(alpha3_p)));
-        sRot = (2*pi*r_mean)/nb_rotor;
-        chordRot = sRot/s_c_optActRot;
-        axial_chordRot = sRot/s_bzRot;
-        
-        
-        %% Stagger angle rotor
-        % Equation 62
-        stagger_angleRot = asind(axial_chordRot/chordRot);
         
         %% Perform loss calculations
-      
+        
+        
         % Find necessary quantities
         % Calculate M1
-        t1 = t01 - (c0^2/(2*cp));
-        a1 = sqrt(gamma*r_gas*t1);
-        m1 = c0/a1;
+        t1 = t01 - (ca^2/(2*cp));
         
         a3 = sqrt(gamma*r_gas*t3);
         m3 = c3 / a3;
@@ -371,15 +346,15 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         rho1 = p1/(z*r_gas*t1);
         
         % Stator
-        Y_P_stator = Y_P_profile_loss(alpha1, alpha2, s_c_opt, m1, m2, rho2, c2, chord_stator, t2, t_max);
-        Y_S_stator = Y_S_secondary_flow_loss(90, alpha2, 90, l_Stator/chord_stator, s_c_opt);
+        Y_P_stator = Y_P_profile_loss(alpha1, alpha2, s_c_opt_Stator, m1, m2, rho2, c2, chord_stator, t2, t_max_stator);
+        Y_S_stator = Y_S_secondary_flow_loss(90, alpha2, alpha1, l_Stator/chord_stator, s_c_opt_Stator);
         Y_cl_stator = 0;
         Y_stator = Y_P_stator + Y_S_stator + Y_cl_stator;
         
         % Rotor Losses
-        Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_rotor, s_c_optRot);
-        Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_optRot, l_Rotor/chord_rotor, 0.00025/l_Rotor, 0);
-        Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt, mw2, mw3, rho3, w3, chord_rotor, tw3, t_max);
+        Y_S_rotor = Y_S_secondary_flow_loss(alpha2_p, alpha3_p, alpha2_p, l_Rotor/chord_rotor, s_c_opt_Rotor);
+        Y_cl_rotor = Y_cl_clearance_loss(alpha2_p, alpha3_p, s_c_opt_Rotor, l_Rotor/chord_rotor, 0.00025/l_Rotor, 0);
+        Y_P_rotor = Y_P_profile_loss(alpha2_p, alpha3_p, s_c_opt_Rotor, mw2, mw3, rho3, w3, chord_rotor, tw3, t_max_rotor);
         Y_rotor = Y_P_rotor + Y_S_rotor + Y_cl_rotor;
         
         
@@ -395,7 +370,7 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         
         Kloss_N = p02_iteration / p01;
         Kloss_R = pw3_iteration / pw2;
-                
+        
         count2 = count2 + 1;
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -404,23 +379,23 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     % Equation 12
     eff_tt = (1 - (t03/t01)) / 1 - (p03_iteration/p01)^((gamma-1)/gamma);
     
-
+    
 end
-    %% Free Vortex
-    % All calculations for rotor
-    
-    w3u = w3u + U;
-    
-    r_tip = r_mean - l_Rotor/2;
-    r_hub = r_mean + l_Rotor/2;
-       
-    w2u_tip = w2u * r_mean / r_tip;
-    w2u_hub = w2u * r_mean / r_tip;
-    w3u_tip = w3u * r_mean / r_tip;
-    w3u_hub = w3u * r_mean / r_tip;
-    
-    alpha2_p_hub = 90 - atand(w2u_hub/c3a);
-    alpha2_p_tip = 90 - atand(w2u_tip/c3a);
-    alpha3_p_hub = 90 - atand(w3u_hub/c3a);
-    alpha3_p_tip = 90 - atand(w3u_tip/c3a);
-    count1 = count1 + 1;
+%% Free Vortex
+% All calculations for rotor
+
+w3u = w3u + U;
+
+r_tip = r_mean - l_Rotor/2;
+r_hub = r_mean + l_Rotor/2;
+
+w2u_tip = w2u * r_mean / r_tip;
+w2u_hub = w2u * r_mean / r_tip;
+w3u_tip = w3u * r_mean / r_tip;
+w3u_hub = w3u * r_mean / r_tip;
+
+alpha2_p_hub = 90 - atand(w2u_hub/c3a);
+alpha2_p_tip = 90 - atand(w2u_tip/c3a);
+alpha3_p_hub = 90 - atand(w3u_hub/c3a);
+alpha3_p_tip = 90 - atand(w3u_tip/c3a);
+count1 = count1 + 1;

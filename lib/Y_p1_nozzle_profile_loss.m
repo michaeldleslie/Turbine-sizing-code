@@ -5,7 +5,7 @@ function Y_p1 = Y_p1_nozzle_profile_loss(alpha_outlet, s_c_design)
 alpha_outlet = abs(alpha_outlet);
 
 % Determine location of s_c_min 
-if alpha_outlet >= 30
+if alpha_outlet <= 30
     s_c_min = 0.46 + alpha_outlet ./ 77;
 else
     s_c_min = 0.614 + alpha_outlet ./ 130;

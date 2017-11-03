@@ -25,9 +25,10 @@ K_p = K_p_compressibility_correction(Mach_inlet, Mach_outlet);
 % K_Re is correction for Reynolds effects
 roughness = 5e-6;
 % Sutherland's law to find viscosity
-C_1 = 1.458e-6;
-C_2 = 110.4;
-dynamic_viscosity_outlet = (C_1 * temperature_outlet ^ 1.5)/(temperature_outlet + C_2);
+C_ref = 72;
+T_ref = 293.85;
+mu_ref = 8.76e-6;
+dynamic_viscosity_outlet = mu_ref * ((T_ref + C_ref)/(temperature_outlet + C_ref)) * (temperature_outlet / T_ref)^1.5;
 K_Re = K_Re_reynolds_correction(rho_outlet, velocity_outlet, chord, dynamic_viscosity_outlet, roughness);
 
 % K_TE is correction for trailing edge thickness, set to K_TE = 1 for both
@@ -42,11 +43,11 @@ Y_p2 = Y_p2_impulse_airfoil_profile_loss(alpha_outlet, s_c_design);
 % Calculate interpolation coefficient
 interpolation_coefficient = (90 - alpha_inlet) / (90 - alpha_outlet);
 
+Y_p_initial = (Y_p1 + interpolation_coefficient^2 * (Y_p2 - Y_p1));
 
 %% Find final Y_P value
 Y_P = K_mod * K_inc * K_M * K_p * K_Re * K_TE * ...
-    (Y_p1 + interpolation_coefficient^2 * (Y_p2 - Y_p1)) * ...
-    (t_max/(0.02*chord))^interpolation_coefficient;
+    Y_p_initial * (t_max/(0.02*chord))^interpolation_coefficient;
 
 
 end
