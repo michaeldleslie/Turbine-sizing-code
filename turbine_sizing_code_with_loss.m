@@ -374,7 +374,7 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     t03 = t3*(1+((gamma-1)/2)*m3^2);
     % Equation 12
     eff_tt = (1 - (t03/t01)) / (1 - (p03_iteration/p01)^((gamma-1)/gamma));
-    
+    count1 = count1 + 1;
     
 end
 %% Free Vortex
@@ -394,6 +394,6 @@ alpha2_p_hub = 90 - atand(w2u_hub/c3a);
 alpha2_p_tip = 90 - atand(w2u_tip/c3a);
 alpha3_p_hub = 90 - atand(w3u_hub/c3a);
 alpha3_p_tip = 90 - atand(w3u_tip/c3a);
-count1 = count1 + 1;
+
 
 fprintf('Code complete.');
