@@ -7,9 +7,9 @@ addpath(genpath(pwd));
 %% Set Up Inital Guess Values & Global Variables
 % Total-to-total efficiency
 eff_tt = 0.85;
-flow_coeff = 0.7;
+flow_coeff = 0.4;
 stage_loading = 1.6;
-Rc = 0.2;
+Rc = 0.4;
 alpha1 = 90;
 t01 = 500;
 p01 = 13842074;
@@ -380,20 +380,20 @@ end
 %% Free Vortex
 % All calculations for rotor
 
-w3u = w3u + U;
+w3u = U;
 
 r_tip = r_mean - l_Rotor/2;
 r_hub = r_mean + l_Rotor/2;
 
 w2u_tip = w2u * r_mean / r_tip;
-w2u_hub = w2u * r_mean / r_tip;
+w2u_hub = w2u * r_mean / r_hub;
 w3u_tip = w3u * r_mean / r_tip;
-w3u_hub = w3u * r_mean / r_tip;
+w3u_hub = w3u * r_mean / r_hub;
 
-alpha2_p_hub = 90 - atand(w2u_hub/c3a);
-alpha2_p_tip = 90 - atand(w2u_tip/c3a);
-alpha3_p_hub = 90 - atand(w3u_hub/c3a);
-alpha3_p_tip = 90 - atand(w3u_tip/c3a);
+alpha2_p_hub = -90 + atand(w2u_hub/c3a);
+alpha2_p_tip = -90 + atand(w2u_tip/c3a);
+alpha3_p_hub = -90 + atand(w3u_hub/c3a);
+alpha3_p_tip = -90 + atand(w3u_tip/c3a);
 %% Calculation of the Stator/Rotor Throat Areas
 o_stator = (s_stator * blockage * sind(alpha2))
 
