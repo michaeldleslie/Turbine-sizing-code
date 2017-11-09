@@ -382,8 +382,8 @@ end
 
 w3u = U;
 
-r_tip = r_mean - l_Rotor/2;
-r_hub = r_mean + l_Rotor/2;
+r_tip = r_mean + l_Rotor/2;
+r_hub = r_mean - l_Rotor/2;
 
 w2u_tip = w2u * r_mean / r_tip;
 w2u_hub = w2u * r_mean / r_hub;
