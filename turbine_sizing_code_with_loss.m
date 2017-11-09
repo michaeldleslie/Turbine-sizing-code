@@ -7,9 +7,9 @@ addpath(genpath(pwd));
 %% Set Up Inital Guess Values & Global Variables
 % Total-to-total efficiency
 eff_tt = 0.85;
-flow_coeff = 0.2;
+flow_coeff = 0.7;
 stage_loading = 1.6;
-Rc = 0.6;
+Rc = 0.2;
 alpha1 = 90;
 t01 = 500;
 p01 = 13842074;
@@ -394,6 +394,14 @@ alpha2_p_hub = 90 - atand(w2u_hub/c3a);
 alpha2_p_tip = 90 - atand(w2u_tip/c3a);
 alpha3_p_hub = 90 - atand(w3u_hub/c3a);
 alpha3_p_tip = 90 - atand(w3u_tip/c3a);
+%% Calculation of the Stator/Rotor Throat Areas
+o_stator = (s_stator * blockage * sind(alpha2))
 
+% Make sure to confirm that the angle used for the rotor calc is in fact
+% 90-alpha3_p
+
+o_rotor = (s_Rotor * blockage * sind(abs(alpha3_p)))
+
+stator_throat = o_stator * l_Stator
 
 fprintf('Code complete.');
