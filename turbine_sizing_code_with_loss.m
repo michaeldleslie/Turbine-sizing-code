@@ -403,5 +403,6 @@ o_stator = (s_stator * blockage * sind(alpha2))
 o_rotor = (s_Rotor * blockage * sind(abs(alpha3_p)))
 
 stator_throat = o_stator * l_Stator
+rotor_throat = o_rotor * l_Rotor
 
 fprintf('Code complete.');
