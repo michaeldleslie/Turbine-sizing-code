@@ -370,8 +370,17 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         count2 = count2 + 1;
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% Recalculate efficiency
+    %% Calculate stagnation temperatures
     t03 = t3*(1+((gamma-1)/2)*m3^2);
+    t02 = t01;
+    %% Calculate relative stagnation temp/pressure
+    % Find relative stagnation temperatures
+    tw03 = tw3*(1+((gamma-1)/2)*mw3^2);
+    tw02 = tw2*(1+((gamma-1)/2)*mw2^2);
+    % Find relative stagnation pressures
+    pw02 = pw2 / ((tw2/tw02)^(gamma/(gamma-1)));
+    pw03 = pw3 / ((tw3/tw03)^(gamma/(gamma-1)));
+    %% Recalculate efficiency
     % Equation 12
     eff_tt = (1 - (t03/t01)) / (1 - (p03_iteration/p01)^((gamma-1)/gamma));
     count1 = count1 + 1;
