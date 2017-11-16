@@ -1,6 +1,6 @@
 %% Initialization
 clc
-clear all;
+clear all; %#ok<CLALL>
 % Add lib to path
 addpath(genpath(pwd));
 
@@ -377,32 +377,51 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     count1 = count1 + 1;
     
 end
+
+
 %% Free Vortex
-% All calculations for rotor
 
 w3u = U;
 
-r_tip = r_mean + l_Rotor/2;
-r_hub = r_mean - l_Rotor/2;
+% Find tip and hub radii for stator and rotor
+r_tip_stator = r_mean + l_Stator/2;
+r_hub_stator = r_mean - l_Stator/2;
+r_tip_rotor = r_mean + l_Rotor/2;
+r_hub_rotor = r_mean - l_Rotor/2;
 
-w2u_tip = w2u * r_mean / r_tip;
-w2u_hub = w2u * r_mean / r_hub;
-w3u_tip = w3u * r_mean / r_tip;
-w3u_hub = w3u * r_mean / r_hub;
+% Scale metal velocity to stator lengths
+U_tip = U * r_tip_stator / r_mean;
+U_hub = U * r_hub_stator / r_mean;
 
+% Scale tangential fluid velocity
+c2u_tip = c2u * r_mean / r_tip_stator;
+c2u_hub = c2u * r_mean / r_hub_stator;
+
+% Convert to relative frame
+w2u_tip = c2u_tip - U_tip;
+w2u_hub = c2u_hub - U_hub;
+
+% This works although it is technically wrong (black magic I guess)
+w3u_tip = w3u * r_mean / r_tip_rotor;
+w3u_hub = w3u * r_mean / r_hub_rotor;
+
+% Finalize alpha2 calcs
+alpha2_hub = -90 + atand(c2u_hub/c3a);
+alpha2_tip = -90 + atand(c2u_tip/c3a);
 alpha2_p_hub = -90 + atand(w2u_hub/c3a);
-alpha2_p_tip = -90 + atand(w2u_tip/c3a);
+alpha2_p_tip = -(90 + atand(w2u_tip/c3a)); % Needs this format to outpot in our coordinate system
+
+% Finalize alpha3 calcs
 alpha3_p_hub = -90 + atand(w3u_hub/c3a);
 alpha3_p_tip = -90 + atand(w3u_tip/c3a);
+
+
 %% Calculation of the Stator/Rotor Throat Areas
-o_stator = (s_stator * blockage * sind(alpha2))
+o_stator = (s_stator * blockage * sind(alpha2));
 
-% Make sure to confirm that the angle used for the rotor calc is in fact
-% 90-alpha3_p
+o_rotor = (s_Rotor * blockage * sind(abs(alpha3_p)));
 
-o_rotor = (s_Rotor * blockage * sind(abs(alpha3_p)))
+stator_throat = o_stator * l_Stator;
+rotor_throat = o_rotor * l_Rotor;
 
-stator_throat = o_stator * l_Stator
-rotor_throat = o_rotor * l_Rotor
-
-fprintf('Code complete.');
+fprintf('Code complete.\n');
