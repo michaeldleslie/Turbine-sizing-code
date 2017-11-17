@@ -382,6 +382,8 @@ end
 %% Free Vortex
 
 w3u = U;
+w3 = sqrt(w3u^2 + w3a^2);
+c3u = 0;
 
 % Find tip and hub radii for stator and rotor
 r_tip_stator = r_mean + l_Stator/2;
@@ -390,30 +392,32 @@ r_tip_rotor = r_mean + l_Rotor/2;
 r_hub_rotor = r_mean - l_Rotor/2;
 
 % Scale metal velocity to stator lengths
-U_tip = U * r_tip_stator / r_mean;
-U_hub = U * r_hub_stator / r_mean;
+U_tip = U * r_tip_rotor / r_mean;
+U_hub= U * r_hub_rotor / r_mean;
 
 % Scale tangential fluid velocity
 c2u_tip = c2u * r_mean / r_tip_stator;
 c2u_hub = c2u * r_mean / r_hub_stator;
+c3u_tip = c3u * r_mean / r_tip_rotor;
+c3u_hub = c3u * r_mean / r_hub_rotor;
 
 % Convert to relative frame
 w2u_tip = c2u_tip - U_tip;
 w2u_hub = c2u_hub - U_hub;
-
-% This works although it is technically wrong (black magic I guess)
-w3u_tip = w3u * r_mean / r_tip_rotor;
-w3u_hub = w3u * r_mean / r_hub_rotor;
+w3u_tip = c3u_tip - U_tip;
+w3u_hub = c3u_hub - U_hub;
 
 % Finalize alpha2 calcs
-alpha2_hub = -90 + atand(c2u_hub/c3a);
-alpha2_tip = -90 + atand(c2u_tip/c3a);
-alpha2_p_hub = -90 + atand(w2u_hub/c3a);
-alpha2_p_tip = -(90 + atand(w2u_tip/c3a)); % Needs this format to outpot in our coordinate system
+alpha2_hub = 90*sign(c2u_hub) - atand(c2u_hub/c3a);
+alpha2_p_hub = 90*sign(w2u_hub) - atand(w2u_hub/c3a);
+alpha2_tip = 90*sign(c2u_tip) - atand(c2u_tip/c3a);
+alpha2_p_tip = 90*sign(w2u_tip) - atand(w2u_tip/c3a);
 
 % Finalize alpha3 calcs
-alpha3_p_hub = -90 + atand(w3u_hub/c3a);
-alpha3_p_tip = -90 + atand(w3u_tip/c3a);
+alpha3_hub = 90*sign(c3u_hub) - atand(c3u_hub/c3a);
+alpha3_p_hub = 90*sign(w3u_hub) - atand(w3u_hub/c3a);
+alpha3_tip = 90*sign(c3u_tip) - atand(c3u_tip/c3a);
+alpha3_p_tip = 90*sign(w3u_tip) - atand(w3u_tip/c3a);
 
 
 %% Calculation of the Stator/Rotor Throat Areas
