@@ -480,8 +480,12 @@ tw2_hub = t2_hub * (1 + ((gamma-1)/2)*mw2_hub^2);
 o2_tip = (2*pi*r_tip_stator/nb_stator) * sind(alpha2_tip) - 2*r_trailingedge;
 o2_hub = (2*pi*r_hub_stator/nb_stator) * sind(alpha2_hub) - 2*r_trailingedge;
 o2_mean = (o2_hub + o2_tip) / 2;
+throat_stator_hub = o2_hub * l_stator;
+throat_stator_tip = o2_tip * l_stator;
 
 % Throat dimension for Hub and Tip - Rotor
 o3_tip = (2*pi*r_tip_rotor/nb_rotor) * sind(alpha3_p_tip) - 2*r_trailingedge;
 o3_hub = (2*pi*r_hub_rotor/nb_rotor) * sind(alpha3_p_hub) - 2*r_trailingedge;
 o3_mean = (o3_hub + o3_tip) / 2;
+throat_rotor_hub = o3_hub * l_rotor;
+throat_rotor_tip = o3_tip * l_rotor;
