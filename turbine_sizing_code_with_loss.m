@@ -422,6 +422,12 @@ w2u_hub = c2u_hub - U_hub;
 w3u_tip = c3u_tip - U_tip;
 w3u_hub = c3u_hub - U_hub;
 
+% Magnitude of relative hub/tip velocities
+w2_tip = sqrt(w2u_tip^2 + w2a^2);
+w2_hub = sqrt(w2u_hub^2 + w2a^2);
+w3_tip = sqrt(w3u_tip^2 + w3a^2);
+w3_hub = sqrt(w3u_hub^2 + w3a^2);
+
 % Finalize alpha2 calcs
 alpha2_hub = 90*sign(c2u_hub) - atand(c2u_hub/c3a);
 alpha2_p_hub = 90*sign(w2u_hub) - atand(w2u_hub/c3a);
@@ -458,3 +464,13 @@ t2_hub = t02 - (c2_hub^2/(2*cp));
 a2_hub = sqrt(gamma * r_gas * t2_hub);
 m2_hub = c2_hub / a2_hub;
 p2_hub = p02 / (1 + ((gamma-1)/2)*m2_hub^2)^(gamma/(gamma-1));
+
+% Relative Tip Calculations
+mw2_tip = w2_tip / a2_tip;
+pw2_tip = p2_tip * (1 + ((gamma-1)/2)*mw2_tip^2)^(gamma/(gamma-1));
+tw2_tip = t2_tip * (1 + ((gamma-1)/2)*mw2_tip^2);
+
+% Relative Hub Calculations
+mw2_hub = w2_hub / a2_hub;
+pw2_hub = p2_hub * (1 + ((gamma-1)/2)*mw2_hub^2)^(gamma/(gamma-1));
+tw2_hub = t2_hub * (1 + ((gamma-1)/2)*mw2_hub^2);
