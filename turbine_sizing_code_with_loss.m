@@ -410,6 +410,12 @@ c2u_hub = c2u * r_mean / r_hub_stator;
 c3u_tip = c3u * r_mean / r_tip_rotor;
 c3u_hub = c3u * r_mean / r_hub_rotor;
 
+% Magnitude of hub/tip velocites
+c2_tip = sqrt(c2u_tip^2 + c2a^2);
+c2_hub = sqrt(c2u_hub^2 + c2a^2);
+c3_tip = sqrt(c3u_tip^2 + c3a^2);
+c3_hub = sqrt(c3u_hub^2 + c3a^2);
+
 % Convert to relative frame
 w2u_tip = c2u_tip - U_tip;
 w2u_hub = c2u_hub - U_hub;
@@ -438,3 +444,17 @@ throat_stator = o_stator * l_stator;
 throat_rotor = o_rotor * l_rotor;
 
 fprintf('Code complete.\n');
+
+%% Station 2 thermodynamic conditions for Hub and Tip
+
+% Tip Calculations
+t2_tip = t02 - (c2_tip^2/(2*cp));
+a2_tip = sqrt(gamma * r_gas * t2_tip);
+m2_tip = c2_tip / a2_tip;
+p2_tip = p02 / (1 + ((gamma-1)/2)*m2_tip^2)^(gamma/(gamma-1));
+
+% Hub Calculations
+t2_hub = t02 - (c2_hub^2/(2*cp));
+a2_hub = sqrt(gamma * r_gas * t2_hub);
+m2_hub = c2_hub / a2_hub;
+p2_hub = p02 / (1 + ((gamma-1)/2)*m2_hub^2)^(gamma/(gamma-1));
