@@ -29,6 +29,7 @@ blockage = 0.9;
 eff_tt_old = 0;
 count1 = 0;
 m1 = 0.05;
+r_trailingedge = 0.000315; % guess
 while (abs(eff_tt - eff_tt_old) > 0.001)
     %% Check if required power is achieved
     
@@ -474,3 +475,13 @@ tw2_tip = t2_tip * (1 + ((gamma-1)/2)*mw2_tip^2);
 mw2_hub = w2_hub / a2_hub;
 pw2_hub = p2_hub * (1 + ((gamma-1)/2)*mw2_hub^2)^(gamma/(gamma-1));
 tw2_hub = t2_hub * (1 + ((gamma-1)/2)*mw2_hub^2);
+
+% Throat dimension for Hub and Tip - Stator
+o2_tip = (2*pi*r_tip_stator/nb_stator) * sind(alpha2_tip) - 2*r_trailingedge;
+o2_hub = (2*pi*r_hub_stator/nb_stator) * sind(alpha2_hub) - 2*r_trailingedge;
+o2_mean = (o2_hub + o2_tip) / 2;
+
+% Throat dimension for Hub and Tip - Rotor
+o3_tip = (2*pi*r_tip_rotor/nb_rotor) * sind(alpha3_p_tip) - 2*r_trailingedge;
+o3_hub = (2*pi*r_hub_rotor/nb_rotor) * sind(alpha3_p_hub) - 2*r_trailingedge;
+o3_mean = (o3_hub + o3_tip) / 2;
