@@ -17,7 +17,7 @@ p3 = 11011992;
 cp = 15636.11;
 gamma = 1.3994;
 z = 1.00;
-mass_flow = 13.61;
+mass_flow = 11.67;
 power_required = 6215*745.7; %Units in Watts
 speed = 50000;
 r_gas = 4123.311;
@@ -29,7 +29,9 @@ blockage = 0.9;
 eff_tt_old = 0;
 count1 = 0;
 m1 = 0.05;
-r_trailingedge = 0.000315; % guess
+r_trailingedge = 0.00025;
+
+
 while (abs(eff_tt - eff_tt_old) > 0.001)
     %% Check if required power is achieved
     
@@ -449,8 +451,6 @@ o_rotor = (s_rotor * blockage * sind(abs(alpha3_p)));
 throat_area_stator = o_stator * l_stator;
 throat_area_rotor = o_rotor * l_rotor;
 
-fprintf('Code complete.\n');
-
 %% Station 2 thermodynamic conditions for Hub and Tip
 
 % Tip Calculations
@@ -483,8 +483,10 @@ throat_stator_hub = o2_hub * l_stator;
 throat_stator_tip = o2_tip * l_stator;
 
 % Throat dimension for Hub and Tip - Rotor
-o3_tip = (2*pi*r_tip_rotor/nb_rotor) * sind(alpha3_p_tip) - 2*r_trailingedge;
-o3_hub = (2*pi*r_hub_rotor/nb_rotor) * sind(alpha3_p_hub) - 2*r_trailingedge;
+o3_tip = (2*pi*r_tip_rotor/nb_rotor) * sind(abs(alpha3_p_tip)) - 2*r_trailingedge;
+o3_hub = (2*pi*r_hub_rotor/nb_rotor) * sind(abs(alpha3_p_hub)) - 2*r_trailingedge;
 o3_mean = (o3_hub + o3_tip) / 2;
 throat_rotor_hub = o3_hub * l_rotor;
 throat_rotor_tip = o3_tip * l_rotor;
+
+fprintf('Code complete.\n');
