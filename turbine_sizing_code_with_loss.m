@@ -127,14 +127,14 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     
     
     %% Annulus flow areas
-    area2 = mass_flow/(rho2*c2a);
-    area3 = mass_flow/(rho3*c3a);
+    annulus_area_stator = mass_flow/(rho2*c2a);
+    annulus_area_rotor = mass_flow/(rho3*c3a);
     
     
     %% Sizing Calcs
     r_mean = (60 * U)/(2*pi*speed);
-    l_stator = area2/(2*pi*r_mean*blockage);
-    l_rotor = area3/(2*pi*r_mean*blockage);
+    l_stator = annulus_area_stator/(2*pi*r_mean*blockage);
+    l_rotor = annulus_area_rotor/(2*pi*r_mean*blockage);
     
     
     %% Stator geometry calculations
@@ -167,7 +167,6 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
     
     
     %% Perform loss calculations
-    
     
     % Find necessary quantities
     % Calculate M1
@@ -293,14 +292,14 @@ while (abs(eff_tt - eff_tt_old) > 0.001)
         
         
         %% Annulus flow areas
-        area2 = mass_flow/(rho2*c2a);
-        area3 = mass_flow/(rho3*c3a);
+        annulus_area_stator = mass_flow/(rho2*c2a);
+        annulus_area_rotor = mass_flow/(rho3*c3a);
         
         
         %% Sizing Calcs
         r_mean = (60 * U)/(2*pi*speed);
-        l_stator = area2/(2*pi*r_mean*blockage);
-        l_rotor = area3/(2*pi*r_mean*blockage);
+        l_stator = annulus_area_stator/(2*pi*r_mean*blockage);
+        l_rotor = annulus_area_rotor/(2*pi*r_mean*blockage);
         
         
         %% Stator geometry calculations
@@ -447,8 +446,8 @@ o_stator = (s_stator * blockage * sind(alpha2));
 
 o_rotor = (s_rotor * blockage * sind(abs(alpha3_p)));
 
-throat_stator = o_stator * l_stator;
-throat_rotor = o_rotor * l_rotor;
+throat_area_stator = o_stator * l_stator;
+throat_area_rotor = o_rotor * l_rotor;
 
 fprintf('Code complete.\n');
 
