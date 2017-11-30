@@ -29,7 +29,7 @@ blockage = 0.9;
 eff_tt_old = 0;
 count1 = 0;
 m1 = 0.05;
-r_trailingedge = 0.00025;
+r_trailingedge = 0.0001;
 
 
 while (abs(eff_tt - eff_tt_old) > 0.001)
